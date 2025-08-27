@@ -11,7 +11,7 @@ export default function Header() {
     return (
         <header className="bg-background border-b border-gray-300 dark:border-gray-700">
             <div className="container mx-auto flex items-center justify-between p-4">
-                <span className="font-bold">Student No: 123456</span>
+                <span className="font-bold">Student No: 21808539</span>
                 <nav>
                     <button
                         className="md:hidden p-2 border rounded"
