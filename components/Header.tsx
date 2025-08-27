@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import ThemeToggle from "./Themetoggle";
+import HamburgerMenu from "./HamburgerMenu";
 
 export default function Header() {
     const [open, setOpen] = useState(false);
@@ -41,6 +42,7 @@ export default function Header() {
                     </ul>
                 </nav>
                 <ThemeToggle />
+                <HamburgerMenu />
             </div>
         </header>
     );
