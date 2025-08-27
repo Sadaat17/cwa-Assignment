@@ -1,4 +1,4 @@
-# Next.js Application UI – Assignment 2
+# Next.js Application UI – Assignment 1
 
 **Author:** Syed Mohammad Sadaat  
 **Student ID:** 21808539  
