@@ -1,8 +1,23 @@
-Name: Syed Mohammad Sadaat
-StudentId: 21808539
-This is the Main branch for the Nextjs application UI.
-The home page contains a form where the user can fill it up and have it be stored in local storage, and copy the code for it as well.
-Includes the Navbar and the pages for Assignment 2
-Includes HamburgerMenu
-Includes Light Mode dark mode
-Includes 
+# Next.js Application UI – Assignment 2
+
+**Author:** Syed Mohammad Sadaat  
+**Student ID:** 21808539  
+
+This repository contains the **main branch** for the Next.js application UI developed for Assignment 2.
+
+---
+
+## 📌 Features
+- 📝 **Home Page Form**  
+  - Users can fill out a form, and the data is stored in **Local Storage**.  
+  - Includes the option to **copy the generated code**.  
+
+- 🧭 **Navigation**  
+  - Responsive **Navbar**  
+  - **Hamburger Menu** for smaller screens  
+
+- 🎨 **Theme Support**  
+  - Toggle between **Light Mode** and **Dark Mode**  
+
+- 📄 **Pages**  
+  - All required pages for **Assignment 2**  
