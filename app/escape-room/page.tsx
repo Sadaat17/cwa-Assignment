@@ -89,8 +89,9 @@ export default function CourtroomGame() {
         if (time > 0 && time % 15 === 0 && time !== lastMessageTime) {
             setLastMessageTime(time);
 
-            // 40% chance of urgent message, or if user has ignored once
-            const showUrgent = Math.random() < 0.4 || urgentIgnoreCount > 0;
+            // If user has ignored once, show urgent again
+            // Otherwise, 25% chance of urgent message
+            const showUrgent = urgentIgnoreCount > 0 || Math.random() < 0.25;
 
             if (showUrgent) {
                 setMessage(urgentMessage);
@@ -100,7 +101,7 @@ export default function CourtroomGame() {
                 setMessage(randomMsg);
             }
         }
-    }, [time, running, scene]);
+    }, [time, running, scene, urgentIgnoreCount, lastMessageTime]);
 
     // Handle notification reply
     const handleReply = (reply: string) => {
@@ -168,97 +169,123 @@ export default function CourtroomGame() {
 
     return (
         <div
-            className="w-screen h-screen bg-cover bg-center flex flex-col items-center justify-center relative"
+            className="w-screen h-screen flex flex-col items-center justify-center relative"
             style={{
                 backgroundImage:
-                    scene === "office"
-                        ? "url('/workdesk.jpg')"
-                        : "url('/courtroom.jpg')",
+                    scene === "courtroom"
+                        ? "url('/courtroom.jpg')"
+                        : running
+                            ? "url('/workdesk.jpg')"
+                            : "none",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundColor: !running && scene === "office" ? "#f3f4f6" : "transparent",
             }}
         >
             {/* Office Scene */}
             {scene === "office" && (
-                <div className="bg-white/90 p-8 rounded-2xl shadow-2xl text-center w-[600px] max-h-[90vh] overflow-y-auto">
-                    <h1 className="text-4xl font-bold mb-4 text-gray-800">
-                        Courtroom Debugging Game
-                    </h1>
+                <>
+                    {/* Timer Setup Screen (Before Start) */}
+                    {!running && (
+                        <div className="bg-white/90 p-8 rounded-2xl shadow-2xl text-center w-[500px]">
+                            <h1 className="text-4xl font-bold mb-6 text-gray-800">
+                                Courtroom Debugging Game
+                            </h1>
 
-                    {/* Timer Settings */}
-                    <div className="flex flex-col items-center gap-2 mb-4">
-                        <label className="font-semibold text-gray-700">
-                            Set Timer (seconds)
-                        </label>
-                        <input
-                            type="number"
-                            value={customTimer}
-                            onChange={(e) => setCustomTimer(Number(e.target.value))}
-                            disabled={running}
-                            className="border-2 border-gray-300 rounded-lg px-3 py-2 text-center w-32 text-lg font-mono"
-                        />
-                    </div>
+                            {/* Timer Settings */}
+                            <div className="flex flex-col items-center gap-3 mb-6">
+                                <label className="font-semibold text-gray-700 text-lg">
+                                    Set Timer (seconds)
+                                </label>
+                                <input
+                                    type="number"
+                                    value={customTimer}
+                                    onChange={(e) => setCustomTimer(Number(e.target.value))}
+                                    className="border-2 border-gray-300 rounded-lg px-3 py-2 text-center w-32 text-lg font-mono"
+                                />
+                            </div>
 
-                    <p className="mb-4 text-xl text-gray-700">
-                        Time: <span className="font-mono font-bold">{time}s</span> /{" "}
-                        {customTimer}s
-                    </p>
-
-                    <button
-                        onClick={() => setRunning((r) => !r)}
-                        className="px-6 py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition mb-6"
-                    >
-                        {running ? "⏸ Pause Timer" : "▶ Start Timer"}
-                    </button>
-
-                    {/* Debugging Challenge Section */}
-                    <div className="mt-6 text-left bg-gray-100 p-6 rounded-xl shadow-inner">
-                        <div className="flex justify-between items-center mb-3">
-                            <h2 className="text-xl font-bold text-gray-800">
-                                🐍 Python Challenge {codeIndex + 1}/{debugChallenges.length}
-                            </h2>
-                        </div>
-
-                        <p className="text-gray-700 mb-3 font-medium">
-                            {currentChallenge.question}
-                        </p>
-
-                        {/* Code Display */}
-                        <div className="bg-gray-800 text-green-400 p-4 rounded-lg font-mono text-sm mb-4 whitespace-pre">
-                            {currentChallenge.code}
-                        </div>
-
-                        {/* Answer Input */}
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Your Fixed Code:
-                        </label>
-                        <textarea
-                            value={userAnswer}
-                            onChange={(e) => setUserAnswer(e.target.value)}
-                            placeholder="Type the corrected code here..."
-                            className="w-full h-32 p-3 border-2 border-gray-300 rounded-lg font-mono text-sm bg-white resize-none focus:border-blue-500 focus:outline-none"
-                        />
-
-                        {/* Error Message */}
-                        {showError && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="mt-3 bg-red-100 border-2 border-red-500 text-red-700 px-4 py-2 rounded-lg flex items-center gap-2"
+                            <button
+                                onClick={() => setRunning(true)}
+                                className="px-8 py-4 bg-blue-600 text-white text-xl font-semibold rounded-xl hover:bg-blue-700 transition"
                             >
-                                <span className="text-xl">❌</span>
-                                <span className="font-semibold">
-                                    Incorrect! Try again. Hint: {currentChallenge.hint}
-                                </span>
-                            </motion.div>
-                        )}
+                                ▶ Start Timer
+                            </button>
+                        </div>
+                    )}
 
-                        <button
-                            onClick={handleSubmitCode}
-                            className="mt-4 w-full px-4 py-3 bg-green-600 text-white text-lg font-semibold rounded-lg hover:bg-green-700 transition"
-                        >
-                            Submit Code
-                        </button>
-                    </div>
-                </div>
+                    {/* Game Screen (After Start) */}
+                    {running && (
+                        <div className="bg-white/90 p-8 rounded-2xl shadow-2xl text-center w-[600px] max-h-[90vh] overflow-y-auto">
+                            <h1 className="text-3xl font-bold mb-3 text-gray-800">
+                                Courtroom Debugging Game
+                            </h1>
+
+                            <p className="mb-4 text-xl text-gray-700">
+                                Time: <span className="font-mono font-bold">{time}s</span> /{" "}
+                                {customTimer}s
+                            </p>
+
+                            <button
+                                onClick={() => setRunning(false)}
+                                className="px-6 py-2 bg-red-600 text-white text-lg rounded-xl hover:bg-red-700 transition mb-6"
+                            >
+                                ⏸ Pause Timer
+                            </button>
+
+                            {/* Debugging Challenge Section */}
+                            <div className="mt-6 text-left bg-gray-100 p-6 rounded-xl shadow-inner">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h2 className="text-xl font-bold text-gray-800">
+                                        🐍 Python Challenge {codeIndex + 1}/{debugChallenges.length}
+                                    </h2>
+                                </div>
+
+                                <p className="text-gray-700 mb-3 font-medium">
+                                    {currentChallenge.question}
+                                </p>
+
+                                {/* Code Display */}
+                                <div className="bg-gray-800 text-green-400 p-4 rounded-lg font-mono text-sm mb-4 whitespace-pre">
+                                    {currentChallenge.code}
+                                </div>
+
+                                {/* Answer Input */}
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Your Fixed Code:
+                                </label>
+                                <textarea
+                                    value={userAnswer}
+                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                    placeholder="Type the corrected code here..."
+                                    className="w-full h-32 p-3 border-2 border-gray-300 rounded-lg font-mono text-sm bg-white resize-none focus:border-blue-500 focus:outline-none"
+                                />
+
+                                {/* Error Message */}
+                                {showError && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="mt-3 bg-red-100 border-2 border-red-500 text-red-700 px-4 py-2 rounded-lg flex items-center gap-2"
+                                    >
+                                        <span className="text-xl">❌</span>
+                                        <span className="font-semibold">
+                                            Incorrect! Try again. Hint: {currentChallenge.hint}
+                                        </span>
+                                    </motion.div>
+                                )}
+
+                                <button
+                                    onClick={handleSubmitCode}
+                                    className="mt-4 w-full px-4 py-3 bg-green-600 text-white text-lg font-semibold rounded-lg hover:bg-green-700 transition"
+                                >
+                                    Submit Code
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Courtroom Scene */}

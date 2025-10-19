@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 // Component for live HTML preview
-Chatgpt Generated:
+//Chatgpt Generated:
 function LiveHTMLPreview({
     mainTitle,
     tabs,
