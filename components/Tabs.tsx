@@ -259,7 +259,7 @@ export default function TabsDemo() {
             tabs.forEach((_, i) => (init[i] = ""));
             setTabContent(init);
         }
-    }, []);
+    }, [tabs]);
 
     const addTab = () => {
         if (tabs.length < 15) {
@@ -714,7 +714,7 @@ export default function TabsDemo() {
                     textAlign: "center"
                 }}>
                     <p style={{ margin: "0 0 8px 0", color: "#0369a1" }}>
-                        💡 <strong>Tip:</strong> Use "Generate HTML" to get the complete standalone HTML file!
+                        💡 <strong>Tip:</strong> Use &quot;Generate HTML&quot; to get the complete standalone HTML file!
                     </p>
                     <p style={{ margin: 0, fontSize: "14px", color: "#0c4a6e" }}>
                         The HTML includes all your tabs, custom names, and text content. You can copy it and save as a .html file to use in any browser.
