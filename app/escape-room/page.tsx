@@ -654,7 +654,7 @@ export default function CourtroomGame() {
                                             Game Over
                                         </h2>
                                         <p className="text-gray-700 mb-2">
-                                            {scene === "courtroom" 
+                                            {scene === "courtroom"
                                                 ? "You ignored too many urgent messages and were sent to the courtroom!"
                                                 : "Time's up! You ran out of time to complete the challenges."}
                                         </p>

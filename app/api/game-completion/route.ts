@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import GameCompletion from '@/models/GameCompletion';
-import sequelize from '@/lib/db';
 
 export async function POST(request: NextRequest) {
     try {
+        // Dynamically import to avoid build-time issues
+        const { default: GameCompletion } = await import('@/models/GameCompletion');
+        const { default: sequelize } = await import('@/lib/db');
+
         // Initialize database connection
         await sequelize.sync();
 
@@ -40,6 +42,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
     try {
+        // Dynamically import to avoid build-time issues
+        const { default: GameCompletion } = await import('@/models/GameCompletion');
+        const { default: sequelize } = await import('@/lib/db');
+
         // Initialize database connection
         await sequelize.sync();
 
