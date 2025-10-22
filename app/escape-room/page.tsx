@@ -1,3 +1,5 @@
+
+//chatgpt generated
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -93,12 +95,17 @@ export default function CourtroomGame() {
     const [gameTimer, setGameTimer] = useState(60);
     const [builtChallenges, setBuiltChallenges] = useState<Challenge[]>([]);
     const [userName, setUserName] = useState("Anonymous");
+    const [gameCompleted, setGameCompleted] = useState(false);
+    const [gameFailed, setGameFailed] = useState(false);
+    const [recordSaved, setRecordSaved] = useState(false);
+    const [saveMessage, setSaveMessage] = useState("");
 
     const currentChallenge = builtChallenges[codeIndex];
 
     // Save game completion to database
     const saveGameCompletion = useCallback(async (status: 'completed' | 'failed') => {
         try {
+            setSaveMessage("Saving...");
             const response = await fetch('/api/game-completion', {
                 method: 'POST',
                 headers: {
@@ -114,10 +121,15 @@ export default function CourtroomGame() {
             });
 
             if (response.ok) {
+                setRecordSaved(true);
+                setSaveMessage("✅ Record saved successfully!");
                 console.log('✅ Game completion saved to database');
+            } else {
+                setSaveMessage("❌ Failed to save record");
             }
         } catch (error) {
             console.error('❌ Error saving game completion:', error);
+            setSaveMessage("❌ Error saving record");
         }
     }, [userName, time, builtChallenges.length, codeIndex]);
 
@@ -168,6 +180,7 @@ export default function CourtroomGame() {
         }
         if (time >= gameTimer) {
             setRunning(false);
+            setGameFailed(true);
             saveGameCompletion('failed');
         }
         return () => {
@@ -208,6 +221,7 @@ export default function CourtroomGame() {
                     setScene("courtroom");
                     setMessage(null);
                     setRunning(false);
+                    setGameFailed(true);
                     saveGameCompletion('failed');
                 } else {
                     setMessage(null);
@@ -230,9 +244,8 @@ export default function CourtroomGame() {
             if (codeIndex < builtChallenges.length - 1) {
                 setCodeIndex(codeIndex + 1);
             } else {
-                alert("🎉 Congratulations! You've completed all debugging challenges!");
-                saveGameCompletion('completed');
-                setCodeIndex(0);
+                setRunning(false);
+                setGameCompleted(true);
             }
         } else {
             setShowError(true);
@@ -251,6 +264,10 @@ export default function CourtroomGame() {
         setShowError(false);
         setLastMessageTime(0);
         setRunning(false);
+        setGameCompleted(false);
+        setGameFailed(false);
+        setRecordSaved(false);
+        setSaveMessage("");
     };
 
     const backToBuilder = () => {
@@ -551,6 +568,131 @@ export default function CourtroomGame() {
                                         Close
                                     </button>
                                 )}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* COMPLETION MODAL */}
+                    <AnimatePresence>
+                        {gameCompleted && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+                            >
+                                <motion.div
+                                    initial={{ scale: 0.8, y: 20 }}
+                                    animate={{ scale: 1, y: 0 }}
+                                    className="bg-white rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4"
+                                >
+                                    <div className="text-center">
+                                        <div className="text-6xl mb-4">🎉</div>
+                                        <h2 className="text-3xl font-bold text-green-600 mb-4">
+                                            Congratulations!
+                                        </h2>
+                                        <p className="text-gray-700 mb-2">
+                                            You've completed all debugging challenges!
+                                        </p>
+                                        <p className="text-gray-600 mb-6">
+                                            Time: <span className="font-bold">{time}s</span>
+                                        </p>
+
+                                        {saveMessage && (
+                                            <div className={`mb-4 p-3 rounded-lg ${saveMessage.includes('✅') ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                {saveMessage}
+                                            </div>
+                                        )}
+
+                                        <div className="flex flex-col gap-3">
+                                            {!recordSaved && (
+                                                <button
+                                                    onClick={() => saveGameCompletion('completed')}
+                                                    className="w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
+                                                >
+                                                    💾 Save Record to Database
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={resetGame}
+                                                className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+                                            >
+                                                🔄 Play Again
+                                            </button>
+                                            <button
+                                                onClick={backToBuilder}
+                                                className="w-full px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition"
+                                            >
+                                                ← Back to Builder
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* FAILURE MODAL */}
+                    <AnimatePresence>
+                        {gameFailed && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+                            >
+                                <motion.div
+                                    initial={{ scale: 0.8, y: 20 }}
+                                    animate={{ scale: 1, y: 0 }}
+                                    className="bg-white rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4"
+                                >
+                                    <div className="text-center">
+                                        <div className="text-6xl mb-4">
+                                            {scene === "courtroom" ? "⚖️" : "⏰"}
+                                        </div>
+                                        <h2 className="text-3xl font-bold text-red-600 mb-4">
+                                            Game Over
+                                        </h2>
+                                        <p className="text-gray-700 mb-2">
+                                            {scene === "courtroom" 
+                                                ? "You ignored too many urgent messages and were sent to the courtroom!"
+                                                : "Time's up! You ran out of time to complete the challenges."}
+                                        </p>
+                                        <p className="text-gray-600 mb-2">
+                                            Time: <span className="font-bold">{time}s</span>
+                                        </p>
+                                        <p className="text-gray-600 mb-6">
+                                            Challenges Completed: <span className="font-bold">{codeIndex}/{builtChallenges.length}</span>
+                                        </p>
+
+                                        {saveMessage && (
+                                            <div className={`mb-4 p-3 rounded-lg ${saveMessage.includes('✅') ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                {saveMessage}
+                                            </div>
+                                        )}
+
+                                        {recordSaved && (
+                                            <div className="mb-4 p-3 rounded-lg bg-blue-100 text-blue-800">
+                                                📊 Your failure record has been automatically saved to the database.
+                                            </div>
+                                        )}
+
+                                        <div className="flex flex-col gap-3">
+                                            <button
+                                                onClick={resetGame}
+                                                className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+                                            >
+                                                🔄 Try Again
+                                            </button>
+                                            <button
+                                                onClick={backToBuilder}
+                                                className="w-full px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition"
+                                            >
+                                                ← Back to Builder
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.div>
                             </motion.div>
                         )}
                     </AnimatePresence>
