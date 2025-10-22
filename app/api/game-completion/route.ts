@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Use the Node.js runtime so Sequelize (which requires Node APIs) can connect to Postgres
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
     try {
         // Dynamically import to avoid build-time issues
@@ -7,7 +10,8 @@ export async function POST(request: NextRequest) {
         const { default: sequelize } = await import('@/lib/db');
 
         // Initialize database connection
-        await sequelize.sync();
+        // authenticate() is lighter-weight than sync() and avoids attempting DDL
+        await sequelize.authenticate();
 
         const body = await request.json();
         const { userName, completionStatus, timeTaken, totalChallenges, challengesCompleted } = body;
@@ -47,7 +51,7 @@ export async function GET() {
         const { default: sequelize } = await import('@/lib/db');
 
         // Initialize database connection
-        await sequelize.sync();
+        await sequelize.authenticate();
 
         const gameCompletions = await GameCompletion.findAll({
             order: [['createdAt', 'DESC']],
