@@ -11,7 +11,9 @@
     "test:e2e:ui": "playwright test --ui",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
-    "db:seed": "npx sequelize-cli db:seed:all"
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:view": "npx tsx lib/viewRecords.ts",
+    "db:test": "npx tsx lib/testDb.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
