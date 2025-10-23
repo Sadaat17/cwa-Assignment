@@ -592,7 +592,7 @@ export default function CourtroomGame() {
                                             Congratulations!
                                         </h2>
                                         <p className="text-gray-700 mb-2">
-                                            You've completed all debugging challenges!
+                                            You&apos;ve completed all debugging challenges!
                                         </p>
                                         <p className="text-gray-600 mb-6">
                                             Time: <span className="font-bold">{time}s</span>

@@ -36,7 +36,7 @@ export default function PrelabPage() {
 
     return (
         <div className="container mx-auto p-8 max-w-2xl">
-            <h1 className="text-3xl font-bold mb-6">Prelab</h1>
+
 
             <button
                 onClick={fetchLambdaReview}

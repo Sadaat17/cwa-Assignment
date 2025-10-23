@@ -28,10 +28,10 @@ export default function Header() {
                             <Link href="/">Home</Link>
                         </li>
                         <li>
-                            <Link href="/Subject Review">Pre-lab Questions</Link>
+                            <Link href="/prelab">Subject Review</Link>
                         </li>
                         <li>
-                            <Link href="/Courtroom">Courtroom Game</Link>
+                            <Link href="/escape-room">Courtroom Game</Link>
                         </li>
                         <li>
                             <Link href="/coding-races">Coding Races</Link>
