@@ -592,7 +592,7 @@ export default function CourtroomGame() {
                                             Congratulations!
                                         </h2>
                                         <p className="text-gray-700 mb-2">
-                                            You&apos;ve completed all debugging challenges!
+                                            You've completed all debugging challenges!
                                         </p>
                                         <p className="text-gray-600 mb-6">
                                             Time: <span className="font-bold">{time}s</span>
@@ -656,7 +656,7 @@ export default function CourtroomGame() {
                                         <p className="text-gray-700 mb-2">
                                             {scene === "courtroom"
                                                 ? "You ignored too many urgent messages and were sent to the courtroom!"
-                                                : "Time&apos;s up! You ran out of time to complete the challenges."}
+                                                : "Time's up! You ran out of time to complete the challenges."}
                                         </p>
                                         <p className="text-gray-600 mb-2">
                                             Time: <span className="font-bold">{time}s</span>
