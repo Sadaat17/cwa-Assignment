@@ -287,6 +287,12 @@ cd cwa-Assignment
 # Install dependencies
 npm install
 
+# Install Playwright browsers
+npx playwright install
+
+# Install Playwright system dependencies
+npx playwright install-deps
+
 # Create .env.local file
 cat > .env.local << 'EOF'
 DB_HOST=localhost
@@ -348,6 +354,14 @@ docker exec -it courtroom_postgres psql -U postgres -d courtroom_db
 ---
 
 ## 🧪 Testing
+
+### First-time Setup
+Before running tests, install Playwright browsers:
+
+```bash
+# Install Playwright browsers and system dependencies
+npx playwright install --with-deps
+```
 
 ### Run E2E Tests
 ```bash
