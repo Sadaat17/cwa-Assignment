@@ -11,7 +11,7 @@ A Next.js-based interactive coding game where players debug code under time pres
 - ✅ **Docker Support** - Containerized deployment with Docker Compose
 - ✅ **E2E Testing** - Playwright test suite
 - ✅ **Modern UI** - Tailwind CSS with Framer Motion animations
-
+- ✅ **Lambda Function Integration** - Intergrated with AWS lambda functions for API calls
 ---
 
 ## 📋 Table of Contents
